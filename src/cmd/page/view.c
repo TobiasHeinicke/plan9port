@@ -227,6 +227,7 @@ showdata(Plumbmsg *msg)
 enum{
 	Restore = 0,
 	Zin,
+	Zout,
 	Fit,
 	Rot,
 	Upside,
@@ -262,6 +263,7 @@ viewer(Document *dd)
  	static char *miditems[] = {
  		"orig size",
  		"zoom in",
+		"zoom out",
  		"fit window",
  		"rotate 90",
  		"upside down",
@@ -595,6 +597,25 @@ viewer(Document *dd)
 						ul = screen->r.min;
 						redraw(screen);
 						flushimage(display, 1);
+						break;
+					}
+				case Zout:		/* zoom out */
+					if (dd->type == Tpdf){		/* pdf */
+						pdf = (PDFInfo *) dd->extra;
+						if (pdf != nil){
+							ppi-= 25;
+							setdim(&pdf->gs, Rect(0,0,0,0), ppi, 0);
+							showpage(page, &menu);
+						}
+						break;
+					}
+					if (dd->type == Tps){		/* ps */
+						ps = (PSInfo *) dd->extra;
+						if (ps != nil){
+							ppi-= 25;
+							setdim(&ps->gs, Rect(0,0,0,0), ppi, 0);
+							showpage(page, &menu);
+						}
 						break;
 					}
 				case Fit:	/* fit */
