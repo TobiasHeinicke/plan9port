@@ -453,6 +453,8 @@ winsettag1(Window *w)
 	static Rune Lput[] = { ' ', 'P', 'u', 't', 0 };
 	static Rune Llook[] = { ' ', 'L', 'o', 'o', 'k', ' ', 0 };
 	static Rune Lpipe[] = { ' ', '|', 0 };
+	static Rune Ldot[] = { ' ', '.', ' ', 0};
+	static Rune Ldotdot[] = { ' ', '.', '.', ' ', 0};
 
 	/* there are races that get us here with stuff in the tag cache, so we take extra care to sync it */
 	if(w->tag.ncache!=0 || w->tag.file->mod)
@@ -497,6 +499,11 @@ winsettag1(Window *w)
 	if(w->isdir){
 		runemove(new+i, Lget, 4);
 		i += 4;
+		runemove(new+i, Ldotdot, 4);
+		i += 4;
+	} else {
+		runemove(new+i, Ldot, 3);
+		i += 3;
 	}
 	runemove(new+i, Lpipe, 2);
 	i += 2;
