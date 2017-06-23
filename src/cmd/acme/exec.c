@@ -31,6 +31,7 @@ Buffer	snarfbuf;
  *	n: length of s  (s is *not* NUL-terminated)
  */
 
+void	clear(Text*, Text*, Text*, int, int, Rune*, int);
 void doabort(Text*, Text*, Text*, int, int, Rune*, int);
 void	del(Text*, Text*, Text*, int, int, Rune*, int);
 void	delcol(Text*, Text*, Text*, int, int, Rune*, int);
@@ -66,10 +67,12 @@ struct Exectab
 };
 
 static Rune LAbort[] = { 'A', 'b', 'o', 'r', 't', 0 };
+static Rune LClear[] = { 'C', 'l', 'e', 'a', 'r', 0 };
 static Rune LCut[] = { 'C', 'u', 't', 0 };
 static Rune LDel[] = { 'D', 'e', 'l', 0 };
 static Rune LDelcol[] = { 'D', 'e', 'l', 'c', 'o', 'l', 0 };
 static Rune LDelete[] = { 'D', 'e', 'l', 'e', 't', 'e', 0 };
+static Rune LDotfiles[] = { 'D', 'o', 't', 'f', 'i', 'l', 'e', 's', 0 };
 static Rune LDump[] = { 'D', 'u', 'm', 'p', 0 };
 static Rune LEdit[] = { 'E', 'd', 'i', 't', 0 };
 static Rune LExit[] = { 'E', 'x', 'i', 't', 0 };
@@ -94,19 +97,19 @@ static Rune LSort[] = { 'S', 'o', 'r', 't', 0 };
 static Rune LTab[] = { 'T', 'a', 'b', 0 };
 static Rune LUndo[] = { 'U', 'n', 'd', 'o', 0 };
 static Rune LZerox[] = { 'Z', 'e', 'r', 'o', 'x', 0 };
-static Rune LDotfiles[] = { 'D', 'o', 't', 'f', 'i', 'l', 'e', 's', 0 };
 
 Exectab exectab[] = {
 	{ LAbort,		doabort,	FALSE,	XXX,		XXX,		},
+	{ LClear,		clear,	FALSE,	XXX,		XXX		},
 	{ LCut,		cut,		TRUE,	TRUE,	TRUE	},
 	{ LDel,		del,		FALSE,	FALSE,	XXX		},
 	{ LDelcol,		delcol,	FALSE,	XXX,		XXX		},
 	{ LDelete,		del,		FALSE,	TRUE,	XXX		},
+	{ LDotfiles,	dotfiles,	FALSE,	XXX,		XXX		},
 	{ LDump,		dump,	FALSE,	TRUE,	XXX		},
 	{ LEdit,		edit,		FALSE,	XXX,		XXX		},
 	{ LExit,		xexit,	FALSE,	XXX,		XXX		},
 	{ LFont,		fontx,	FALSE,	XXX,		XXX		},
-	{ LDotfiles,	dotfiles,	FALSE,	XXX,		XXX		},
 	{ LGet,		get,		FALSE,	TRUE,	XXX		},
 	{ LID,		id,		FALSE,	XXX,		XXX		},
 	{ LIncl,		incl,		FALSE,	XXX,		XXX		},
@@ -795,6 +798,18 @@ put(Text *et, Text *_0, Text *argt, int _1, int _2, Rune *arg, int narg)
 }
 
 void
+clear(Text *et, Text *_0, Text *_1, int _2, int _3, Rune *_4, int _5)
+{
+	USED(_0);
+	USED(_1);
+	USED(_2);
+	USED(_3);
+	USED(_4);
+	USED(_5);
+	textreset(&et->w->body);
+}
+
+void
 dump(Text *_0, Text *_1, Text *argt, int isdump, int _2, Rune *arg, int narg)
 {
 	char *name;
@@ -1460,6 +1475,7 @@ runproc(void *argvp)
 		if(filename){
 			putenv("%", filename);
 			putenv("samfile", filename);
+			putenv("w", filename);
 			free(filename);
 		}
 		c->md = fsysmount(rdir, ndir, incl, nincl);
