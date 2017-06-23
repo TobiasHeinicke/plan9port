@@ -800,13 +800,19 @@ put(Text *et, Text *_0, Text *argt, int _1, int _2, Rune *arg, int narg)
 void
 clear(Text *et, Text *_0, Text *_1, int _2, int _3, Rune *_4, int _5)
 {
+	Window* w = et->w;
+
 	USED(_0);
 	USED(_1);
 	USED(_2);
 	USED(_3);
 	USED(_4);
 	USED(_5);
-	textreset(&et->w->body);
+
+	if(w->isscratch) {
+		textreset(&w->body);
+	}
+
 }
 
 void
