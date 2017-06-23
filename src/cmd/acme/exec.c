@@ -94,6 +94,7 @@ static Rune LSort[] = { 'S', 'o', 'r', 't', 0 };
 static Rune LTab[] = { 'T', 'a', 'b', 0 };
 static Rune LUndo[] = { 'U', 'n', 'd', 'o', 0 };
 static Rune LZerox[] = { 'Z', 'e', 'r', 'o', 'x', 0 };
+static Rune LDotfiles[] = { 'D', 'o', 't', 'f', 'i', 'l', 'e', 's', 0 };
 
 Exectab exectab[] = {
 	{ LAbort,		doabort,	FALSE,	XXX,		XXX,		},
@@ -105,6 +106,7 @@ Exectab exectab[] = {
 	{ LEdit,		edit,		FALSE,	XXX,		XXX		},
 	{ LExit,		xexit,	FALSE,	XXX,		XXX		},
 	{ LFont,		fontx,	FALSE,	XXX,		XXX		},
+	{ LDotfiles,	dotfiles,	FALSE,	XXX,		XXX		},
 	{ LGet,		get,		FALSE,	TRUE,	XXX		},
 	{ LID,		id,		FALSE,	XXX,		XXX		},
 	{ LIncl,		incl,		FALSE,	XXX,		XXX		},
@@ -1132,6 +1134,15 @@ xkill(Text *_0, Text *_1, Text *argt, int _2, int _3, Rune *arg, int narg)
 
 static Rune Lfix[] = { 'f', 'i', 'x', 0 };
 static Rune Lvar[] = { 'v', 'a', 'r', 0 };
+void
+dotfiles(Text *et, Text *t, Text *argt, int flag1, int _0, Rune *arg, int narg)
+{
+
+	ignore_hidden = !ignore_hidden;
+	if(et->w->isdir) {
+		get(et,t,argt,flag1,_0,arg,narg);
+	}
+}
 
 void
 fontx(Text *et, Text *t, Text *argt, int _0, int _1, Rune *arg, int narg)

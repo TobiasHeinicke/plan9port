@@ -65,6 +65,8 @@ threadmain(int argc, char *argv[])
 	int ncol;
 	Display *d;
 
+	ignore_hidden = 1;
+
 	rfork(RFENVG|RFNAMEG);
 
 	ncol = -1;

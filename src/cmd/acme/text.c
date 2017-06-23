@@ -238,7 +238,7 @@ textload(Text *t, uint q0, char *file, int setqid)
 		dlp = nil;
 		ndl = 0;
 		dbuf = nil;
-		while((n=dirread(fd, &dbuf)) > 0){
+		while((n=dirread_hidden(fd, &dbuf,ignore_hidden)) > 0){
 			for(i=0; i<n; i++){
 				dl = emalloc(sizeof(Dirlist));
 				j = strlen(dbuf[i].name);

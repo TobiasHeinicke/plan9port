@@ -827,6 +827,7 @@ extern	Dir*	dirfstat(int);
 extern	int	dirwstat(char*, Dir*);
 extern	int	dirfwstat(int, Dir*);
 extern	long	dirread(int, Dir**);
+extern	long	dirread_hidden(int, Dir**,int);
 extern	void	nulldir(Dir*);
 extern	long	dirreadall(int, Dir**);
 /* extern	int	getpid(void); <unistd.h> */

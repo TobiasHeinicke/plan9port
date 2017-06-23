@@ -53,7 +53,7 @@ static inline int d_reclen(struct dirent *de) { return de->d_reclen; }
 #endif
 
 static int
-countde(char *p, int n)
+countde_hidden(char *p, int n, int ignore_hidden)
 {
 	char *e;
 	int m;
@@ -65,7 +65,7 @@ countde(char *p, int n)
 		de = (struct dirent*)p;
 		if(d_reclen(de) <= 4+2+2+1 || p+d_reclen(de) > e)
 			break;
-		if(de->d_name[0]=='.' && de->d_name[1]==0)
+		if(de->d_name[0]=='.' && (de->d_name[1]==0 || ignore_hidden))
 			de->d_name[0] = 0;
 		else if(de->d_name[0]=='.' && de->d_name[1]=='.' && de->d_name[2]==0)
 			de->d_name[0] = 0;
@@ -75,8 +75,14 @@ countde(char *p, int n)
 	return m;
 }
 
+/*static int
+countde(char *p, int n)
+{
+	return countde_hidden(p,n,0);
+}*/
+
 static int
-dirpackage(int fd, char *buf, int n, Dir **dp)
+dirpackage_hidden(int fd, char *buf, int n, Dir **dp, int ignore_hidden)
 {
 	int oldwd;
 	char *p, *str, *estr;
@@ -85,7 +91,7 @@ dirpackage(int fd, char *buf, int n, Dir **dp)
 	struct stat st, lst;
 	Dir *d;
 
-	n = countde(buf, n);
+	n = countde_hidden(buf, n, ignore_hidden);
 	if(n <= 0)
 		return n;
 
@@ -141,8 +147,14 @@ dirpackage(int fd, char *buf, int n, Dir **dp)
 	return m;
 }
 
+static int
+dirpackage(int fd, char *buf, int n, Dir **dp)
+{
+	return dirpackage_hidden(fd,buf,n,dp,0);
+}
+
 long
-dirread(int fd, Dir **dp)
+dirread_hidden(int fd, Dir **dp, int ignore_hidden)
 {
 	char *buf;
 	struct stat st;
@@ -165,11 +177,16 @@ dirread(int fd, Dir **dp)
 		free(buf);
 		return -1;
 	}
-	n = dirpackage(fd, buf, n, dp);
+	n = dirpackage_hidden(fd, buf, n, dp, ignore_hidden);
 	free(buf);
 	return n;
 }
 
+long
+dirread(int fd, Dir **dp)
+{
+	return dirread_hidden(fd, dp, 0);
+}
 
 long
 dirreadall(int fd, Dir **d)
