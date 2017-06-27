@@ -809,7 +809,7 @@ clear(Text *et, Text *_0, Text *_1, int _2, int _3, Rune *_4, int _5)
 	USED(_4);
 	USED(_5);
 
-	if(w->isscratch) {
+	if(!w->isdir) {
 		textreset(&w->body);
 	}
 
@@ -1160,7 +1160,7 @@ dotfiles(Text *et, Text *t, Text *argt, int flag1, int _0, Rune *arg, int narg)
 {
 
 	ignore_hidden = !ignore_hidden;
-	if(et->w->isdir) {
+	if(et && et->w && et->w->isdir) {
 		get(et,t,argt,flag1,_0,arg,narg);
 	}
 }

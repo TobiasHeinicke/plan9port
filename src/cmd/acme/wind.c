@@ -455,7 +455,6 @@ winsettag1(Window *w)
 	static Rune Lpipe[] = { ' ', '|', 0 };
 	static Rune Ldot[] = { ' ', '.', ' ', 0};
 	static Rune Ldotdot[] = { ' ', '.', '.', ' ', 0};
-	static Rune Ldotfiles[] = { ' ', 'D', 'o', 't', 'f', 'i', 'l', 'e', 's', ' ', 0 };
 	static Rune Lclear[] = { ' ', 'C', 'l', 'e', 'a', 'r', 0 };
 
 	/* there are races that get us here with stuff in the tag cache, so we take extra care to sync it */
@@ -505,8 +504,6 @@ winsettag1(Window *w)
 	if(w->isdir){
 		runemove(new+i, Lget, 4);
 		i += 4;
-		runemove(new+i, Ldotfiles, 10);
-		i += 10;
 		runemove(new+i, Ldotdot, 4);
 		i += 4;
 	} else {
