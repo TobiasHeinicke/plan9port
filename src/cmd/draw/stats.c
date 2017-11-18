@@ -120,6 +120,7 @@ double	scale = 1.0;
 int		logscale = 0;
 int		ylabels = 0;
 int		oldsystem = 0;
+int		hidemachnames = 0;
 int 		sleeptime = 1000;
 int		changedvmax;
 
@@ -512,7 +513,7 @@ resize(void)
 
 	/* label left edge */
 	x = screen->r.min.x;
-	y = screen->r.min.y + Labspace+mediumfont->height+Labspace;
+	y = screen->r.min.y + (hidemachnames ? 0 : Labspace+mediumfont->height+Labspace);
 	dy = (screen->r.max.y - y)/ngraph;
 	dx = Labspace+stringwidth(mediumfont, "0")+Labspace;
 	startx = x+dx+1;
@@ -526,19 +527,22 @@ resize(void)
 
 	/* label top edge */
 	dx = (screen->r.max.x - startx)/nmach;
-	for(x=startx, i=0; i<nmach; i++,x+=dx){
-		draw(screen, Rect(x-1, starty-1, x, screen->r.max.y), display->black, nil, ZP);
-		j = dx/stringwidth(mediumfont, "0");
-	/*	n = mach[i].nproc; */
-		n = 1;
-		if(n>1 && j>=1+3+(n>10)+(n>100)){	/* first char of name + (n) */
-			j -= 3+(n>10)+(n>100);
-			if(j <= 0)
-				j = 1;
-			snprint(buf, sizeof buf, "%.*s(%d)", j, mach[i].name, n);
-		}else
-			snprint(buf, sizeof buf, "%.*s", j, mach[i].name);
-		string(screen, Pt(x+Labspace, screen->r.min.y + Labspace), display->black, ZP, mediumfont, buf);
+
+	if(!hidemachnames) {
+		for(x=startx, i=0; i<nmach; i++,x+=dx){
+			draw(screen, Rect(x-1, starty-1, x, screen->r.max.y), display->black, nil, ZP);
+			j = dx/stringwidth(mediumfont, "0");
+		/*	n = mach[i].nproc; */
+			n = 1;
+			if(n>1 && j>=1+3+(n>10)+(n>100)){	/* first char of name + (n) */
+				j -= 3+(n>10)+(n>100);
+				if(j <= 0)
+					j = 1;
+				snprint(buf, sizeof buf, "%.*s(%d)", j, mach[i].name, n);
+			}else
+				snprint(buf, sizeof buf, "%.*s", j, mach[i].name);
+			string(screen, Pt(x+Labspace, screen->r.min.y + Labspace), display->black, ZP, mediumfont, buf);
+		}
 	}
 
 	maxx = screen->r.max.x;
@@ -719,6 +723,9 @@ threadmain(int argc, char *argv[])
 		break;
 	case 'O':
 		oldsystem = 1;
+		break;
+	case 'H':
+		hidemachnames = 1;
 		break;
 	case 'W':
 		winsize = EARGF(usage());
