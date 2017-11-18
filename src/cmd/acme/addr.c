@@ -8,6 +8,7 @@
 #include <frame.h>
 #include <fcall.h>
 #include <plumb.h>
+#include <libsec.h>
 #include "dat.h"
 #include "fns.h"
 
@@ -46,6 +47,27 @@ isregexc(int r)
 	if(utfrune("^+-.*?#,;[]()$", r)!=nil)
 		return TRUE;
 	return FALSE;
+}
+
+// nlcounttopos starts at q0 and advances nl lines,
+// being careful not to walk past the end of the text,
+// and then nr chars, being careful not to walk past
+// the end of the current line.
+// It returns the final position.
+long
+nlcounttopos(Text *t, long q0, long nl, long nr)
+{
+	while(nl > 0 && q0 < t->file->b.nc) {
+		if(textreadc(t, q0++) == '\n')
+			nl--;
+	}
+	if(nl > 0)
+		return q0;
+	while(nr > 0 && q0 < t->file->b.nc && textreadc(t, q0) != '\n') {
+		q0++;
+		nr--;
+	}
+	return q0;
 }
 
 Range
