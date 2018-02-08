@@ -1,5 +1,18 @@
 This is a port of many Plan 9 libraries and programs to Unix.
 
+Fork Changes
+------------
+
+Compared to the original plan9port this fork contains the following
+(notable [there may be others]) differences:
+
+- acme may write a command history to a file (-H option)
+- stats can be told to hide machine names (-H option)
+- 9front paint was ported (PR for original p9p, so might make it upstream)
+- acme: dotfiles are hidden by default and can be toggled with **Dotfiles**
+- acme: scratch area contains **Clear** to instantly remove all text
+- page: added zoom out
+
 Installation
 ------------
 
