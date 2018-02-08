@@ -1784,7 +1784,7 @@ run(Window *win, char *s, Rune *rdir, int ndir, int newns, char *argaddr, char *
 			if(fd < 0) {
 				warning(nil, "can't create/open history file\n");
 			} else {
-				char* buf = emalloc((strlen(s)+2) * sizeof(char*));
+				char* buf = emalloc((strlen(s)+2) * sizeof(char));
 				sprint(buf, "%s\n", s);
 				if(write(fd, buf, strlen(buf)+1) != strlen(buf)+1) {
 					warning(nil, "could not write to history file\n");
