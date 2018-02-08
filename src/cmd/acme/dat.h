@@ -554,6 +554,7 @@ int			messagesize;		/* negotiated in 9P version setup */
 int			globalautoindent;
 int			dodollarsigns;
 int			ignore_hidden;
+int			write_history;
 char*		mtpt;
 
 enum

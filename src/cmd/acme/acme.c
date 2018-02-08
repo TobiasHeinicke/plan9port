@@ -67,6 +67,7 @@ threadmain(int argc, char *argv[])
 	Display *d;
 
 	ignore_hidden = 1;
+	write_history = 0;
 
 	rfork(RFENVG|RFNAMEG);
 
@@ -120,6 +121,9 @@ threadmain(int argc, char *argv[])
 		winsize = ARGF();
 		if(winsize == nil)
 			goto Usage;
+		break;
+	case 'H':
+		write_history = 1;
 		break;
 	default:
 	Usage:

@@ -4,7 +4,7 @@ acme, win, awd \- interactive text windows
 .SH SYNOPSIS
 .B acme
 [
-.B -abr
+.B -abrH
 ]
 [
 .B -f
@@ -90,6 +90,13 @@ to use FUSE (see
 to mount itself at
 .IR mtpt .
 (Experimental.)
+.PP
+The
+.B -H
+option instructs
+.I acme
+to (create and) write to a history file
+.RB ( \&$home/.acme_history )
 .PP
 .SS Windows
 .I Acme

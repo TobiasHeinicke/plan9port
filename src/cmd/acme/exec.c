@@ -1769,5 +1769,32 @@ run(Window *win, char *s, Rune *rdir, int ndir, int newns, char *argaddr, char *
 	arg = emalloc(2*sizeof(void*));
 	arg[0] = c;
 	arg[1] = cpid;
+	if(write_history) {
+		char* homedir = getenv("home");
+		if(homedir) {
+			char* path = emalloc((strlen(homedir)+15)*sizeof(char));
+			sprint(path, "%s/.acme_history", homedir);
+
+			int fd = create(path, OWRITE | OEXCL, 0600);
+			if(fd < 0) {
+				fd = open(path, OWRITE | OAPPEND);
+			}
+			free(path);
+
+			if(fd < 0) {
+				warning(nil, "can't create/open history file\n");
+			} else {
+				char* buf = emalloc((strlen(s)+2) * sizeof(char*));
+				sprint(buf, "%s\n", s);
+				if(write(fd, buf, strlen(buf)+1) != strlen(buf)+1) {
+					warning(nil, "could not write to history file\n");
+				}
+				free(buf);
+				close(fd);
+			}
+		} else {
+			warning(nil, "$home is not set, not writing history\n");
+		}
+	}
 	threadcreate(runwaittask, arg, STACK);
 }
