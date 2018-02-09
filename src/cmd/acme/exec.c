@@ -1772,7 +1772,7 @@ run(Window *win, char *s, Rune *rdir, int ndir, int newns, char *argaddr, char *
 	if(write_history) {
 		char* homedir = getenv("home");
 		if(homedir) {
-			char* path = emalloc((strlen(homedir)+15)*sizeof(char));
+			char* path = emalloc(strlen(homedir)+15);
 			sprint(path, "%s/.acme_history", homedir);
 
 			int fd = create(path, OWRITE | OEXCL, 0600);
@@ -1784,9 +1784,9 @@ run(Window *win, char *s, Rune *rdir, int ndir, int newns, char *argaddr, char *
 			if(fd < 0) {
 				warning(nil, "can't create/open history file\n");
 			} else {
-				char* buf = emalloc((strlen(s)+2) * sizeof(char));
+				char* buf = emalloc(strlen(s)+2);
 				sprint(buf, "%s\n", s);
-				if(write(fd, buf, strlen(buf)+1) != strlen(buf)+1) {
+				if(write(fd, buf, strlen(buf)) != strlen(buf)) {
 					warning(nil, "could not write to history file\n");
 				}
 				free(buf);
