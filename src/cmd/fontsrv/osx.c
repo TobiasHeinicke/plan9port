@@ -104,7 +104,7 @@ static char *lines[] = {
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 	"abcdefghijklmnopqrstuvwxyz",
 	"g",
-	"┌┬┐├┼┤└┴┘│─",
+	"ÁĂÇÂÄĊÀČĀĄÅÃĥľƒ",
 	"ὕαλον ϕαγεῖν δύναμαι· τοῦτο οὔ με βλάπτει.",
 	"私はガラスを食べられます。それは私を傷つけません。",
 	"Aš galiu valgyti stiklą ir jis manęs nežeidžia",
@@ -277,6 +277,9 @@ mksubfont(XFont *f, char *name, int lo, int hi, int size, int antialias)
 
 	CGContextSetAllowsAntialiasing(ctxt, antialias);
 	CGContextSetTextPosition(ctxt, 0, 0);	// XXX
+#if OSX_VERSION >= 101400
+	CGContextSetAllowsFontSmoothing(ctxt, false);
+#endif
 
 	x = 0;
 	for(i=lo; i<=hi; i++, fc++) {

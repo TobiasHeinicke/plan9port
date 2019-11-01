@@ -541,6 +541,11 @@ _flushmemscreen(Rectangle r)
 		return;
 
 	rect = NSMakeRect(r.min.x, r.min.y, Dx(r), Dy(r));
+
+	// This can get blocked behind responding to mouse events,
+	// which need to acquire the zlock, so let go of it during
+	// the flush. Perhaps the waitUntilDone:YES is wrong?
+	zunlock();
 	[appdelegate
 		performSelectorOnMainThread:@selector(callflushimg:)
 		withObject:[NSValue valueWithRect:rect]
@@ -548,6 +553,7 @@ _flushmemscreen(Rectangle r)
 		modes:[NSArray arrayWithObjects:
 			NSRunLoopCommonModes,
 			@"waiting image", nil]];
+	zlock();
 }
 
 static void drawimg(NSRect, uint);
@@ -927,6 +933,8 @@ getkeyboard(NSEvent *e)
 	case NSFlagsChanged:
 		if(in.mbuttons || in.kbuttons){
 			in.kbuttons = 0;
+			if(m & NSControlKeyMask)
+				in.kbuttons |= 1;
 			if(m & NSAlternateKeyMask)
 				in.kbuttons |= 2;
 			if(m & NSCommandKeyMask)
@@ -1408,8 +1416,10 @@ kicklabel0(char *label) {
 }
 
 void
-setcursor(Cursor *c)
+setcursor(Cursor *c, Cursor2 *c2)
 {
+	USED(c2);
+
 	/*
 	 * No cursor change unless in main thread.
 	 */
@@ -1655,4 +1665,10 @@ setprocname(const char *s)
                                                NULL /* optional out param */);
   if(err != noErr)
     fprint(2, "Call to set process name failed\n");
+}
+
+void
+resizewindow(Rectangle r)
+{
+	USED(r);
 }
