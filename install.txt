@@ -59,8 +59,8 @@
 
           On most Linux systems, the X11 header packages need to be
           installed to build using X11.  On Debian. the required pack-
-          ages are libx11-dev, libxext-dev, and libxt-dev.  On Ubuntu,
-          it suffices to install xorg-dev.
+          ages are libx11-dev, libxext-dev, and libxt-dev. Alpine
+          Linux additionally requires the package libucontext-dev.
 
           INSTALL can safely be repeated to rebuild the system from
           scratch.

@@ -12,7 +12,10 @@ Compared to the original plan9port this fork contains the following
 - acme: dotfiles are hidden by default and can be toggled with **Dotfiles**
 - acme: scratch area contains **Clear** to instantly remove all text
 - page: added zoom out
-
+- fix build on Alpine Linux (musl libc)
+  - now probably breaking on other linux distributions
+    TODO: test and fix (at least for Debian)
+ 
 Installation
 ------------
 

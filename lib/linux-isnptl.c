@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
