@@ -745,6 +745,7 @@ openfile(Text *t, Expand *e)
 	Rune *rp;
 	Runestr rs;
 	uint dummy;
+	Text *u;
 
 	r.q0 = 0;
 	r.q1 = 0;
@@ -783,7 +784,18 @@ openfile(Text *t, Expand *e)
 		ow = nil;
 		if(t)
 			ow = t->w;
-		w = makenewwindow(t);
+		if(ow != nil && ow->navi && ow->isdir) {
+			w = ow;
+			t = &w->body;
+			for(i=0; i<t->file->ntext; i++){
+				u = t->file->text[i];
+				textreset(u);
+				windirfree(u->w);
+			}
+			ow = nil;
+		} else {
+			w = makenewwindow(t);
+		}
 		t = &w->body;
 		winsetname(w, e->name, e->nname);
 		if(textload(t, 0, e->bname, 1) >= 0)
@@ -793,6 +805,7 @@ openfile(Text *t, Expand *e)
 		winsettag(t->w);
 		textsetselect(&t->w->tag, t->w->tag.file->b.nc, t->w->tag.file->b.nc);
 		if(ow != nil){
+			w->navi = ow->navi && ow->isdir;
 			for(i=ow->nincl; --i>=0; ){
 				n = runestrlen(ow->incl[i]);
 				rp = runemalloc(n);
@@ -800,7 +813,7 @@ openfile(Text *t, Expand *e)
 				winaddincl(w, rp, n);
 			}
 			w->autoindent = ow->autoindent;
-		}else
+		}else if(!w->navi || !w->isdir)
 			w->autoindent = globalautoindent;
 		xfidlog(w, "new");
 	}

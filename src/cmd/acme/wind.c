@@ -28,6 +28,7 @@ wininit(Window *w, Window *clone, Rectangle r)
 	w->tagexpand = TRUE;
 	w->body.w = w;
 	w->id = ++winid;
+	w->navi = FALSE;
 	incref(&w->ref);
 	if(globalincref)
 		incref(&w->ref);
@@ -453,6 +454,8 @@ winsettag1(Window *w)
 	static Rune Lget[] = { ' ', 'G', 'e', 't', 0 };
 	static Rune Lput[] = { ' ', 'P', 'u', 't', 0 };
 	static Rune Llook[] = { ' ', 'L', 'o', 'o', 'k', ' ', 0 };
+	static Rune Lnav[] = { ' ', 'N', 'a', 'v', ' ', 0 };
+	static Rune Ldef[] = { ' ', 'D', 'e', 'f', ' ', 0 };
 	static Rune Lpipe[] = { ' ', '|', 0 };
 	static Rune Ldot[] = { ' ', '.', ' ', 0};
 	static Rune Ldotdot[] = { ' ', '.', '.', ' ', 0};
@@ -503,6 +506,13 @@ winsettag1(Window *w)
 		i += 6;
 	}
 	if(w->isdir){
+		if(w->navi) {
+			runemove(new+i, Ldef, 4);
+			i += 4;
+		} else {
+			runemove(new+i, Lnav, 4);
+			i += 4;
+		}
 		runemove(new+i, Lget, 4);
 		i += 4;
 		runemove(new+i, Ldotdot, 4);

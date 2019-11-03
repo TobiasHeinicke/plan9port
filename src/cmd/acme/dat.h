@@ -242,6 +242,7 @@ struct Window
 	uchar	dirty;
 	uchar	autoindent;
 	uchar	showdel;
+	uchar	navi;
 	int		id;
 	Range	addr;
 	Range	limit;

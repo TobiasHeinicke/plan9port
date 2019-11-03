@@ -15,6 +15,7 @@ Compared to the original plan9port this fork contains the following
 - fix build on Alpine Linux (musl libc)
   - now probably breaking on other linux distributions
     TODO: test and fix (at least for Debian)
+- acme: navigation mode for easily travelling through file hierarchy
  
 Installation
 ------------

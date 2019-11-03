@@ -48,6 +48,8 @@ void	indent(Text*, Text*, Text*, int, int, Rune*, int);
 void	xkill(Text*, Text*, Text*, int, int, Rune*, int);
 void	local(Text*, Text*, Text*, int, int, Rune*, int);
 void	look(Text*, Text*, Text*, int, int, Rune*, int);
+void	navi(Text*, Text*, Text*, int, int, Rune*, int);
+void	nonavi(Text*, Text*, Text*, int, int, Rune*, int);
 void	newcol(Text*, Text*, Text*, int, int, Rune*, int);
 void	paste(Text*, Text*, Text*, int, int, Rune*, int);
 void	put(Text*, Text*, Text*, int, int, Rune*, int);
@@ -86,6 +88,8 @@ static Rune LKill[] = { 'K', 'i', 'l', 'l', 0 };
 static Rune LLoad[] = { 'L', 'o', 'a', 'd', 0 };
 static Rune LLocal[] = { 'L', 'o', 'c', 'a', 'l', 0 };
 static Rune LLook[] = { 'L', 'o', 'o', 'k', 0 };
+static Rune LNav[] = { 'N', 'a', 'v', 0 };
+static Rune LDef[] = { 'D', 'e', 'f', 0 };
 static Rune LNew[] = { 'N', 'e', 'w', 0 };
 static Rune LNewcol[] = { 'N', 'e', 'w', 'c', 'o', 'l', 0 };
 static Rune LPaste[] = { 'P', 'a', 's', 't', 'e', 0 };
@@ -119,6 +123,8 @@ Exectab exectab[] = {
 	{ LLoad,		dump,	FALSE,	FALSE,	XXX		},
 	{ LLocal,		local,	FALSE,	XXX,		XXX		},
 	{ LLook,		look,		FALSE,	XXX,		XXX		},
+	{ LNav,		navi,		FALSE,	XXX,		XXX		},
+	{ LDef,		nonavi,	FALSE,	XXX,		XXX		},
 	{ LNew,		new,		FALSE,	XXX,		XXX		},
 	{ LNewcol,	newcol,	FALSE,	XXX,		XXX		},
 	{ LPaste,		paste,	TRUE,	TRUE,	XXX		},
@@ -1290,6 +1296,44 @@ dotfiles(Text *et, Text *t, Text *argt, int flag1, int _0, Rune *arg, int narg)
 	if(et && et->w && et->w->isdir) {
 		get(et,t,argt,flag1,_0,arg,narg);
 	}
+}
+
+void
+navi(Text *et, Text* _0, Text* _1, int _2, int _3, Rune* _4, int _5)
+{
+	Window *w;
+
+	USED(_0);
+	USED(_1);
+	USED(_2);
+	USED(_3);
+	USED(_4);
+	USED(_5);
+
+	if(et==nil || et->w==nil)
+		return;
+	w = et->w;
+	w->navi = TRUE;
+	winsettag(w);
+}
+
+void
+nonavi(Text *et, Text* _0, Text* _1, int _2, int _3, Rune* _4, int _5)
+{
+	Window *w;
+
+	USED(_0);
+	USED(_1);
+	USED(_2);
+	USED(_3);
+	USED(_4);
+	USED(_5);
+
+	if(et==nil || et->w==nil)
+		return;
+	w = et->w;
+	w->navi = FALSE;
+	winsettag(w);
 }
 
 void

@@ -201,7 +201,7 @@ textload(Text *t, uint q0, char *file, int setqid)
 	Text *u;
 	DigestState *h;
 
-	if(t->ncache!=0 || t->file->b.nc || t->w==nil || t!=&t->w->body)
+	if(t->w==nil || !t->w->navi && (t->ncache!=0 || t->file->b.nc || t!=&t->w->body))
 		error("text.load");
 	if(t->w->isdir && t->file->nname==0){
 		warning(nil, "empty directory name");
