@@ -61,6 +61,7 @@
           installed to build using X11.  On Debian. the required pack-
           ages are libx11-dev, libxext-dev, and libxt-dev. Alpine
           Linux additionally requires the package libucontext-dev.
+          Also note that perl is required.
 
           INSTALL can safely be repeated to rebuild the system from
           scratch.
