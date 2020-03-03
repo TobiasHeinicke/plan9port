@@ -38,10 +38,15 @@ case "$tag" in
 *Linux*)
 	ld=${CC9:-gcc}
 	userpath=true
-	extralibs="$extralibs -lutil -lresolv -lucontext"
+	extralibs="$extralibs -lutil -lresolv"
 	case "${SYSVERSION:-`uname -r`}" in
 	2.6.* | [3-9].* | [1-9][0-9].*)
 		extralibs="$extralibs -lpthread"
+		;;
+	esac
+	case "${KERNVERSION:-`uname -v`}" in
+		*Alpine*)
+		extralibs="$extralibs -lucontext"
 		;;
 	esac
 	;;

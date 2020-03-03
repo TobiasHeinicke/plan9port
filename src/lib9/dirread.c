@@ -10,7 +10,17 @@ extern int _p9dir(struct stat*, struct stat*, char*, Dir*, char**, char*);
 static int
 mygetdents(int fd, struct dirent *buf, int n)
 {
+#if defined(__GLIBC__)
+	off_t off;
+	int nn;
+
+	/* This doesn't match the man page, but it works in Debian with a 2.2 kernel */
+	off = p9seek(fd, 0, 1);
+	nn = getdirentries(fd, (void*)buf, n, &off);
+	return nn;
+#else
 	return getdents(fd, (void*)buf, n);
+#endif
 }
 #elif defined(__APPLE__) 
 static int
