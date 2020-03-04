@@ -19,7 +19,7 @@ Installation
 ------------
 
 To install, run ./INSTALL.  It builds mk and then uses mk to
-run the rest of the installation.  
+run the rest of the installation.
 
 For more details, see install(1), at install.txt in this directory
 and at https://9fans.github.io/plan9port/man/man1/install.html.
@@ -37,7 +37,7 @@ or differences from Plan 9.
 Helping out
 -----------
 
-If you'd like to help out, great!  The TODO file contains a small list.
+If you'd like to help out, great!
 
 If you port this code to other architectures, please share your changes
 so others can benefit.
@@ -45,7 +45,7 @@ so others can benefit.
 Git
 ---
 
-You can use Git to keep your local copy up-to-date as we make 
+You can use Git to keep your local copy up-to-date as we make
 changes and fix bugs.  See the git(1) man page here ("9 man git")
 for details on using Git.
 
