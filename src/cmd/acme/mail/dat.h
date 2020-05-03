@@ -76,6 +76,7 @@ struct Message
 	char		*disposition;
 	char		*filename;
 	char		*digest;
+	char		*flags;
 
 	Message	*next;	/* next in this mailbox */
 	Message	*prev;	/* prev in this mailbox */

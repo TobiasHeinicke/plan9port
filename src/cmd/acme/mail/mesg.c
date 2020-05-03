@@ -164,6 +164,9 @@ loadinfo(Message *m, char *dir)
 		}else if(strcmp(s, "filename") == 0){
 			free(m->filename);
 			m->filename = estrdup(t);
+		}else if(strcmp(s, "flags") == 0){
+			free(m->flags);
+			m->flags = estrdup(t);
 		}
 		free(s);
 	}
@@ -370,18 +373,50 @@ readfile(char *dir, char *name, int *np)
 	return data;
 }
 
+void
+fmtflags(char *b, char *flg) {
+	char *sub;
+	int seen, replied;
+	
+	*b++ = '[';
+
+	if(flg == nil) {
+		*b++ = '*';
+		*b++ = ' ';
+	} else {
+		sub = flg;
+		seen = 0;
+		replied = 0;
+		do {
+			if(*sub == ' ')
+				sub++;
+			if(strncmp(sub, "seen", 4) == 0)
+				seen = 1;
+			if(strncmp(sub, "replied", 7) == 0)
+				replied = 1;
+		} while((sub = strchr(sub, ' ')) != nil);
+		*b++ = seen ? ' ' : '*';
+		*b++ = replied ? 'R' : ' ';
+	}
+
+	*b++ = ']';
+	*b = '\0';
+}
+
 char*
 info(Message *m, int ind, int ogf)
 {
 	char *i;
 	int j, len, lens;
 	char *p;
-	char fmt[80], s[80];
+	char fmt[80], s[80], flg[5];
 
 	if (ogf)
 		p=m->to;
 	else
 		p=m->fromcolon;
+
+	fmtflags(flg, m->flags);
 
 	if(ind==0 && shortmenu){
 		len = 30;
@@ -403,6 +438,7 @@ info(Message *m, int ind, int ogf)
 	}
 
 	i = estrdup("");
+	i = eappend(i, " ", flg);
 	i = eappend(i, "\t", p);
 	i = egrow(i, "\t", stripdate(m->date));
 	if(ind == 0){
@@ -574,6 +610,22 @@ mesgmenudel(Window *w, Message *mbox, Message *m)
 }
 
 void
+mesgmenureflag(Window *w, Message *m) {
+	char *buf, flg[5];
+
+	fmtflags(flg, m->flags);
+	buf = name2regexp(deletedrx01, m->name);
+	strcat(buf, "+/\\[[^\\]]*\\]/");
+	if(w->data == nil)
+		w->data = winopenfile(w, "data");
+	if(winsetaddr(w, buf, 1))
+		fswrite(w->data, flg, strlen(flg));
+	free(buf);
+
+	fsclose(w->data);
+	w->data = nil;
+}
+void
 mesgmenumark(Window *w, char *which, char *mark)
 {
 	char *buf;
@@ -607,6 +659,7 @@ mesgfreeparts(Message *m)
 	free(m->disposition);
 	free(m->filename);
 	free(m->digest);
+	free(m->flags);
 }
 
 void
@@ -1287,6 +1340,28 @@ plumb(Message *m, char *dir)
 	}
 }
 
+void
+setseenflag(Message *m) {
+	char *sub;
+	int alreadyset;
+
+	if(m->flags == nil) {
+		m->flags = malloc(5);
+		m->flags = "seen";
+		return;
+	}
+
+	alreadyset = strncmp(m->flags, "seen", 4) == 0;
+	while(!alreadyset && (sub = strchr(m->flags, ' ')) != nil) {
+		sub++;
+		alreadyset = strncmp(sub, "seen", 4) == 0;
+	}
+	if(!alreadyset) {
+		m->flags = realloc(m->flags, strlen(m->flags) + 6);
+		strcat(m->flags, " seen");
+	}
+}
+
 int
 mesgopen(Message *mbox, char *dir, char *s, Message *mesg, int plumbed, char *digest)
 {
@@ -1346,6 +1421,8 @@ mesgopen(Message *mbox, char *dir, char *s, Message *mesg, int plumbed, char *di
 		/* sleep(100); */
 		winclean(m->w);
 		m->opened = 1;
+		setseenflag(m);
+		mesgmenureflag(mbox->w, m);
 		if(ndirelem == 1){
 			free(u);
 			return 1;
